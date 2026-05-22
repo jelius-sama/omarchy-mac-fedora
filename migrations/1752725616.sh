@@ -6,7 +6,7 @@ if [[ -f ~/.local/share/applications/blueberry.desktop ]]; then
   update-desktop-database ~/.local/share/applications/
 
   gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"
-  gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-dark"
+  gsettings set org.gnome.desktop.interface gtk-theme "adw-gtk3-dark"
 
   omarchy-refresh-waybar
 fi

@@ -15,7 +15,7 @@ omarchy-theme-set "Tokyo Night"
 
 # Force GNOME defaults for Fedora installs
 if command -v gsettings >/dev/null 2>&1; then
-  gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark' >/dev/null 2>&1 || true
+  gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark' >/dev/null 2>&1 || true
   gsettings set org.gnome.desktop.interface icon-theme 'breeze-dark' >/dev/null 2>&1 || true
   gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' >/dev/null 2>&1 || true
 fi
