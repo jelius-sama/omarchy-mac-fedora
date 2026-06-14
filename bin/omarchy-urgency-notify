@@ -1,12 +1,29 @@
 #!/bin/bash
 
-socat - UNIX-CONNECT:$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock | \
+last_sig=""
+last_time=0
+
+socat -U - UNIX-CONNECT:"$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock" | \
 while IFS= read -r line; do
     if [[ "$line" == "urgent>>"* ]]; then
         addr="${line#urgent>>}"
-        # Get window info from the address
-        class=$(hyprctl clients -j | jq -r ".[] | select(.address == \"0x$addr\") | .class")
-        title=$(hyprctl clients -j | jq -r ".[] | select(.address == \"0x$addr\") | .title")
-        notify-send "🔔 $class" "$title is requesting attention"
+        info=$(hyprctl clients -j | jq -r --arg a "0x$addr" \
+            '.[] | select(.address == $a) | "\(.class)\t\(.title)"')
+        class="${info%%$'\t'*}"
+        title="${info#*$'\t'}"
+
+        if [[ -n "$class" ]]; then
+            now=$(date +%s%3N)
+            sig="$class|$title"
+
+            if [[ "$sig" == "$last_sig" ]] && (( now - last_time < 1000 )); then
+                continue
+            fi
+
+            last_sig="$sig"
+            last_time="$now"
+            notify-send "$title is requesting attention"
+            echo "$title is requesting attention"
+        fi
     fi
 done
